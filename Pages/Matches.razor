@@ -1,0 +1,36 @@
+﻿@page "/matches"
+@using FootballBlazorApp.DTO
+@inject HttpClient Http
+
+<h3 class="text-dark bg-warning p-2">Matches</h3>
+
+@if (matches == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var m in matches)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card bg-warning text-dark">
+                    <div class="card-header">@m.MatchDate.ToShortDateString()</div>
+                    <div class="card-body">
+                        <p>@m.HomeTeam vs @m.AwayTeam</p>
+                        <p>Score: @m.HomeScore : @m.AwayScore</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    List<MatchDto>? matches;
+
+    protected override async Task OnInitializedAsync()
+    {
+        matches = await Http.GetFromJsonAsync<List<MatchDto>>("api/matches");
+    }
+}
